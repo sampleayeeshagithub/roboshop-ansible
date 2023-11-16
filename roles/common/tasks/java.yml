@@ -1,17 +1,14 @@
-- name: Enable NodeJS
-  ansible.builtin.shell: dnf module disable nodejs -y ; dnf module enable nodejs:18 -y
-
-- name: Install NodeJS
+- name: Install Maven
   ansible.builtin.dnf:
-    name: nodejs
+    name: maven
     state: installed
 
 - name: App Pre-Req
   ansible.builtin.import_tasks:
     file: app-prereq.yml
 
-- name: Install NodeJS Dependencies
-  ansible.builtin.shell: npm install
+- name: Build Java Package
+  ansible.builtin.shell: mvn clean package ; mv target/{{component}}-1.0.jar {{component}}.jar
   args:
     chdir: /app
 
